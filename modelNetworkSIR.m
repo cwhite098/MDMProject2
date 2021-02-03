@@ -85,7 +85,7 @@ for t = 2:tf
         
         %check to see if I becomes R
         r = rand;
-        if data(2,p) == 1 && r < sum(poisspdf(0:(t-data(3,p)), infectivePeriod+1))
+        if data(2,p) == 1 && r < sum(poisspdf(0:(t-data(3,p)), infectivePeriod))
                data(2,p) = 2; 
                R = R+1;
                I = I-1;
