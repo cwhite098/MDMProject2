@@ -28,7 +28,7 @@ hwait = waitbar(0,'Please wait. Generating Networked Model');
 
 %set population size for the networks
 popSize = n;
-a = a;
+
 %calculate GCC (commented out because it is slow)
 %clusterCoeff = global_clustering_coefficient(A);
 
@@ -61,7 +61,7 @@ for i = 1:I
 end
 
 %Algorithm for spread of disease
-for t = 2:tf
+for t = 1:tf
     %update loading bar
     waitbar(t/tf,hwait,sprintf('Please wait. Generating networked model\n%.1f %%',(t/tf)*100));
     %counters for changes in S,I and R numbers
@@ -106,9 +106,9 @@ for t = 2:tf
     end
     
     %update vectors
-    IVec(t) = IVec(t-1)+I;
-    RVec(t) = RVec(t-1)+R;
-    SVec(t) = SVec(t-1)+S;
+    IVec(t+1) = IVec(t)+I;
+    RVec(t+1) = RVec(t)+R;
+    SVec(t+1) = SVec(t)+S;
    
 end
 
@@ -135,10 +135,10 @@ figure;
 tiledlayout(2,1);
 
 nexttile;
-plot((0:length(SVec)-1), SVec, '-g', 'LineWidth', 2)
+plot((0:tf), SVec, '-g', 'LineWidth', 2)
 hold on
-plot((0:length(IVec)-1), IVec, '-r', 'LineWidth', 2)
-plot((0:length(RVec)-1), RVec, '-b', 'LineWidth', 2)
+plot((0:tf), IVec, '-r', 'LineWidth', 2)
+plot((0:tf), RVec, '-b', 'LineWidth', 2)
 legend('S','I','R');
 title(sprintf('SIR Network Model GCC =%0.5f'), 'FontSize', 20); %add back GCC here
 xlabel('time', 'FontSize', 20),ylabel('people', 'FontSize', 20);
