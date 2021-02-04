@@ -1,10 +1,11 @@
 # MDMProject2
 
-Either run SIRSolve for the ODE solution or call modelNetworkFunction as follows
+Either run SIRSolve/SIRDSolve for the ODE solution or call modelNetworkSIR/modelNetworkSIRD as follows
 
-modelNetworkFunction(a,b, infectivePeriod, tf, n, I0, A)
+modelNetworkFunction(a,b,mu, infectivePeriod, tf, n, I0, A)
 
 where a and b are infection parameters, 
+mu is the mortality rate (exclude for SIR version),
 infectivePeriod is how long the disease lasts, 
 tf is how long to run the model for (days),
 n is the population size, 
