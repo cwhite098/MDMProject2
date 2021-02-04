@@ -23,14 +23,12 @@ function [data] = modelNetworkSIR(a, b, infectivePeriod, tf, n, I0, A)
 %       row7 = number of people infected by this node
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 % init loading bar
 hwait = waitbar(0,'Please wait. Generating Networked Model');
 
 %set population size for the networks
 popSize = n;
-
+a = a;
 %calculate GCC (commented out because it is slow)
 %clusterCoeff = global_clustering_coefficient(A);
 
@@ -82,15 +80,7 @@ for t = 2:tf
                 neighbours(neighbours==visits(i)) = [];
             end
         end
-        
-        %check to see if I becomes R
-        r = rand;
-        if data(2,p) == 1 && r < sum(poisspdf(0:(t-data(3,p)), infectivePeriod))
-               data(2,p) = 2; 
-               R = R+1;
-               I = I-1;
-        end  
-        
+                
         %nodes visit each other
         for visit = visits
             %if I person visits S person, infection may occur
@@ -104,7 +94,15 @@ for t = 2:tf
                   data(7,p) = data(7,p) + 1;
                end
             end           
-        end        
+        end
+         
+        %check to see if I becomes R
+        r = rand;
+        if data(2,p) == 1 && r < 1/infectivePeriod
+               data(2,p) = 2; 
+               R = R+1;
+               I = I-1;
+        end 
     end
     
     %update vectors
