@@ -1,6 +1,6 @@
 function [data] = modelNetworkSIRD(a, b, mu, infectivePeriod, tf, n, I0, A)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Function MODELNETWORKSIR produces an SIR graph against time and graphs the
+%Function MODELNETWORKSIRD produces an SIRD graph against time and graphs the
 %network.
 %
 %INPUTS
@@ -47,6 +47,7 @@ DVec = [D];
 
 G = graph(A);
 
+
 %tracking who is S, I, R and D
 %  in row 2, 0=susceptible, 1=infected, 2=recovered, 3=dead
 data = [1:popSize];
@@ -75,53 +76,60 @@ for t = 1:tf
     
     for p = data(1,:)
         
-        %choose b random neighbours
-        neighbours = neighbors(G,p)';    
-        for i = 1:b
-            if not(isempty(neighbours))
+        %checks to see if person is dead
+        if not(data(2,p) == 3)
+            
+            %choose b random neighbours
+            neighbours = neighbors(G,p)';    
+            
+            visits = [];
+            while length(visits) < b && not(isempty(neighbours))
                 ind = randperm(length(neighbours), 1);
-                visits(i) = neighbours(ind);                
-                neighbours(neighbours==visits(i)) = [];
+                if not(data(3,neighbours(ind)) == 3)
+                    visits(end+1) = neighbours(ind);
+                end
+                    neighbours(ind) = [];                        
+             end
+              
+
+            %nodes visit each other
+            for visit = visits
+                %if I person visits S person, infection may occur
+                if data(2,p) == 1 && data(2, visit) == 0
+                   r = rand;
+                   if r <= a
+                      data(2, visit) = 1;
+                      data(3,visit) = t;
+                      I = I+1;
+                      S = S-1;
+                      data(7,p) = data(7,p) + 1;
+                   end
+                end           
+            end
+
+            %check to see if I becomes R
+            r = rand;
+            if data(2,p) == 1 && r < 1/infectivePeriod
+                   data(2,p) = 2; 
+                   R = R+1;
+                   I = I-1;
+            end 
+
+            %check to see if infected person dies
+            r = rand;
+            if data(2,p) == 1 && r < mu
+                   data(2,p) = 3; 
+                   D = D+1;
+                   I = I-1;                 
             end
         end
-                
-        %nodes visit each other
-        for visit = visits
-            %if I person visits S person, infection may occur
-            if data(2,p) == 1 && data(2, visit) == 0
-               r = rand;
-               if r <= a
-                  data(2, visit) = 1;
-                  data(3,visit) = t;
-                  I = I+1;
-                  S = S-1;
-                  data(7,p) = data(7,p) + 1;
-               end
-            end           
-        end
-         
-        %check to see if I becomes R
-        r = rand;
-        if data(2,p) == 1 && r < 1/infectivePeriod
-               data(2,p) = 2; 
-               R = R+1;
-               I = I-1;
-        end 
-        
-        %check to see if infected person dies
-        r = rand;
-        if data(2,p) == 1 && r < mu
-               data(2,p) = 3; 
-               D = D+1;
-               I = I-1;
-        end
+
+        %update vectors
+        IVec(t+1) = IVec(t)+I;
+        RVec(t+1) = RVec(t)+R;
+        SVec(t+1) = SVec(t)+S;
+        DVec(t+1) = DVec(t)+D;
     end
-    
-    %update vectors
-    IVec(t+1) = IVec(t)+I;
-    RVec(t+1) = RVec(t)+R;
-    SVec(t+1) = SVec(t)+S;
-    DVec(t+1) = DVec(t)+D;
 end
 
 %calculate LCC for each node (commented out because slow)
