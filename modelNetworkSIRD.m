@@ -39,7 +39,7 @@ S = popSize - I0;   %susceptible population
 I = I0;             %initially infected
 D = 0;
 
-%vectors tracking numbers of S, I and R
+%vectors tracking numbers of S, I, R and D
 IVec = [I];
 RVec = [R];
 SVec = [S];
@@ -47,8 +47,8 @@ DVec = [D];
 
 G = graph(A);
 
-%tracking who is S, I and R
-%  in row 2, 0=susceptible, 1=infected, 2=recovered
+%tracking who is S, I, R and D
+%  in row 2, 0=susceptible, 1=infected, 2=recovered, 3=dead
 data = [1:popSize];
 data(2,:) = zeros;
 data(3,:) = Inf;
@@ -67,7 +67,7 @@ end
 for t = 1:tf
     %update loading bar
     waitbar(t/tf,hwait,sprintf('Please wait. Generating networked model\n%.1f %%',(t/tf)*100));
-    %counters for changes in S,I and R numbers
+    %counters for changes in S,I,R and D numbers
     S = 0;
     I = 0;
     R = 0;
