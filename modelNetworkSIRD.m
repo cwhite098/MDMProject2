@@ -76,40 +76,35 @@ for t = 1:tf
     
     for p = data(1,:)
         
-        %checks to see if person is dead
-        if not(data(2,p) == 3)
+        %checks to see if person is infected
+        if data(2,p) == 1
             
-            %choose b random neighbours
-            neighbours = neighbors(G,p)';    
-            
+            %if I person visits S person, infection may occur         
+            neighbours = neighbors(G,p)';                
             visits = [];
             while length(visits) < b && not(isempty(neighbours))
                 ind = randperm(length(neighbours), 1);
-                if not(data(3,neighbours(ind)) == 3)
+                if not(data(2,neighbours(ind)) == 3)
                     visits(end+1) = neighbours(ind);
                 end
-                    neighbours(ind) = [];                        
-             end
-              
-
-            %nodes visit each other
-            for visit = visits
-                %if I person visits S person, infection may occur
-                if data(2,p) == 1 && data(2, visit) == 0
-                   r = rand;
-                   if r <= a
-                      data(2, visit) = 1;
-                      data(3,visit) = t;
-                      I = I+1;
-                      S = S-1;
-                      data(7,p) = data(7,p) + 1;
-                   end
-                end           
+                neighbours(ind) = [];                        
             end
+            for visit = visits 
+                r = rand;
+                if r <= a && data(2,visit) ==0
+                    data(2, visit) = 1;
+                    data(3,visit) = t;
+                    I = I+1;
+                    S = S-1;
+                    data(7,p) = data(7,p) + 1;
+                end
+            end                 
+           
+           
 
             %check to see if I becomes R
             r = rand;
-            if data(2,p) == 1 && r < 1/infectivePeriod
+            if r < 1/infectivePeriod
                    data(2,p) = 2; 
                    R = R+1;
                    I = I-1;
@@ -117,7 +112,7 @@ for t = 1:tf
 
             %check to see if infected person dies
             r = rand;
-            if data(2,p) == 1 && r < mu
+            if r < mu
                    data(2,p) = 3; 
                    D = D+1;
                    I = I-1;                 
