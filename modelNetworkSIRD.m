@@ -104,7 +104,7 @@ for t = 1:tf
 
             %check to see if I becomes R
             r = rand;
-            if r < 1/infectivePeriod
+            if r < 1/infectivePeriod && data(2,p)==1
                    data(2,p) = 2; 
                    R = R+1;
                    I = I-1;
@@ -112,19 +112,18 @@ for t = 1:tf
 
             %check to see if infected person dies
             r = rand;
-            if r < mu
+            if r < mu && data(2,p)==1
                    data(2,p) = 3; 
                    D = D+1;
                    I = I-1;                 
             end
-        end
-
-        %update vectors
-        IVec(t+1) = IVec(t)+I;
-        RVec(t+1) = RVec(t)+R;
-        SVec(t+1) = SVec(t)+S;
-        DVec(t+1) = DVec(t)+D;
+        end        
     end
+    %update vectors
+    IVec(t+1) = IVec(t)+I;
+    RVec(t+1) = RVec(t)+R;
+    SVec(t+1) = SVec(t)+S;
+    DVec(t+1) = DVec(t)+D;
 end
 
 %calculate LCC for each node (commented out because slow)
