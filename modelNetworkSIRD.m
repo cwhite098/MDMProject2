@@ -1,4 +1,4 @@
-function [data] = modelNetworkSIRD(a, b, mu, infectivePeriod, tf, n, I0, A)
+function [data] = modelNetworkSIRD(a, b, mu, infectivePeriod, tf, n, I0, who, A)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Function MODELNETWORKSIRD produces an SIRD graph against time and graphs the
 %network.
@@ -11,6 +11,7 @@ function [data] = modelNetworkSIRD(a, b, mu, infectivePeriod, tf, n, I0, A)
 % tf = end time for simulatoin
 % n = population size
 % I0 = number of initially infected
+% who = who gets initially infected ('least', 'most' or 'random')
 % A = adjacency matrix for network
 %
 %OUTPUTS
@@ -29,9 +30,9 @@ hwait = waitbar(0,'Please wait. Generating Networked Model');
 
 %set population size for the networks
 popSize = n;
-a = a;
+
 %calculate GCC (commented out because it is slow)
-%clusterCoeff = global_clustering_coefficient(A);
+%GCC = global_clustering_coefficient(A);
 
 %initial infection status of population
 R = 0;              %initial recovered population
@@ -55,31 +56,64 @@ data(2,:) = zeros;
 data(3,:) = Inf;
 data(7,:) = zeros;
 
-%randomly assign initially infected
-for i = 1:I
-    %random number generator
-    r = randi(popSize, 1);
-    %setting infection status and time of infection
-    data(2,r) = 1;
-    data(3,r) = 0;
+%assigning initially infected
+if contains(who,'random')
+    %randomly assign initially infected
+    for i = 1:I
+        %random number generator
+        r = randi(popSize, 1);
+        %setting infection status and time of infection
+        data(2,r) = 1;
+        data(3,r) = 0;
+    end
 end
+if contains(who,'most')
+    %most connected are initially infected   
+    %calculate degree for each node
+    for n = 1:popSize
+        data(5,n) = degree(G,n);
+    end
+    %sort by degree
+    data = sortrows(data',5)';
+    %most connected get infected
+    data(2,end-I0:end) = 1;
+    data(3,end-I0:end) = 0;
+    data = sortrows(data',1)';    
+end
+if contains(who,'least')
+    %most connected are initially infected   
+    %calculate degree for each node
+    for n = 1:popSize
+        data(5,n) = degree(G,n);
+    end
+    %sort by degree
+    data = sortrows(data',5)';
+    %most connected get infected
+    data(2,1:I0) = 1;
+    data(3,1:I0) = 0;
+    data = sortrows(data',1)';    
+end
+
+
 
 %Algorithm for spread of disease
 for t = 1:tf
     %update loading bar
     waitbar(t/tf,hwait,sprintf('Please wait. Generating networked model\n%.1f %%',(t/tf)*100));
+    
     %counters for changes in S,I,R and D numbers
     S = 0;
     I = 0;
     R = 0;
     D = 0;
     
+    % iteratre through population
     for p = data(1,:)
         
         %checks to see if person is infected
         if data(2,p) == 1
             
-            %if I person visits S person, infection may occur         
+            %find b random neighbours for person p       
             neighbours = neighbors(G,p)';                
             visits = [];
             while length(visits) < b && not(isempty(neighbours))
@@ -89,6 +123,7 @@ for t = 1:tf
                 end
                 neighbours(ind) = [];                        
             end
+            %infected person visits neighbours and infection may occur
             for visit = visits 
                 r = rand;
                 if r <= a && data(2,visit) ==0
@@ -99,9 +134,7 @@ for t = 1:tf
                     data(7,p) = data(7,p) + 1;
                 end
             end                 
-           
-           
-
+          
             %check to see if I becomes R
             r = rand;
             if r < 1/infectivePeriod && data(2,p)==1
@@ -131,11 +164,6 @@ end
 %    tracking(4,n) = local_clustering_coefficient(A,n);
 %end
 
-%calculate degree for each node (commented out because slow)
-%for n = 1:popSize
-%    tracking(5,n) = degree(G,n);
-%end
-
 %calculate shortest dist to p0 for each node (commented out because slow)
 %for n = 1:popSize
 %    [TR,D] = shortestpathtree(G, n, patient0);
@@ -155,7 +183,7 @@ plot((0:tf), IVec, '-r', 'LineWidth', 2)
 plot((0:tf), RVec, '-b', 'LineWidth', 2)
 plot((0:tf), DVec, '-k', 'LineWidth', 2)
 legend('S','I','R','D');
-title(sprintf('SIRD Network Model GCC =%0.5f'), 'FontSize', 20); %add back GCC here
+title(sprintf('SIRD Network Model GCC =%0.5f'), 'FontSize', 20);
 xlabel('time', 'FontSize', 20),ylabel('people', 'FontSize', 20);
 grid on;
 ax = gca; ax.YAxis.FontSize = 15; ax.XAxis.FontSize = 15;
