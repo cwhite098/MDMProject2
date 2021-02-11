@@ -72,5 +72,29 @@ def createwholestar(avpop,populationvariance,avconectivity,connectivityvariance,
     centralcluster.add_edges_from(interclusters)
     print(popcount)
     return centralcluster
-network=createwhole(15,2,12,1,10,5,centralclusterfactor=2)
+def starwithinterconect(avpop,populationvariance,avconectivity,connectivityvariance,numclusters,interclusterconnect,centralclusterconnect,centralclusterfactor=1,popcount=0):
+    #central cluster has increased pop
+    #degrees = sorted(centralcluster.degree, key=lambda x: x[1], reverse=True)
+    #station=degrees[0] #main connection to outerclusters
+    clusters=[]
+    (centralcluster,popcount)=creatcluster(centralclusterfactor*avpop,populationvariance,avconectivity,connectivityvariance,popcount)#central cluster has increased pop
+    g=nx.Graph()
+    g=nx.compose(g,centralcluster)
+    for i in range(numclusters):
+        print("creating intercluster connections \n\n\n")
+        (cluster,popcount)=creatcluster(avpop,populationvariance,avconectivity,connectivityvariance,popcount)
+        g=nx.compose(g,cluster)
+        clusters.append(cluster)
+    for p in clusters:
+        startpoints2=random.choices(list(p.nodes()),k=centralclusterconnect)
+        endpoints2 =random.choices(list(centralcluster.nodes()),k=centralclusterconnect)
+        
+        startpoints=random.choices(list(p.nodes()),k=interclusterconnect)
+        endpoints =random.choices(list(g.nodes()),k=interclusterconnect)
+        for l in range(interclusterconnect):
+            g.add_edge(startpoints[l],endpoints[l])
+            g.add_edge(startpoints2[l],endpoints2[l])
+    print(popcount)
+    return g
+network=starwithinterconect(20,2,12,1,10,5,5,centralclusterfactor=4)
 nx.draw(network)
