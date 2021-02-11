@@ -137,7 +137,7 @@ for t = 1:tf
           
             %check to see if I becomes R
             r = rand;
-            if r < 1/infectivePeriod && data(2,p)==1
+            if r < 1/(infectivePeriod+0.1) && data(2,p)==1
                    data(2,p) = 2; 
                    R = R+1;
                    I = I-1;
