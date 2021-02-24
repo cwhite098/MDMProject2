@@ -96,5 +96,10 @@ def starwithinterconect(avpop,populationvariance,avconectivity,connectivityvaria
             g.add_edge(startpoints2[l],endpoints2[l])
     print(popcount)
     return g
-network=starwithinterconect(20,2,12,1,10,5,5,centralclusterfactor=4)
+#network=starwithinterconect(20,2,12,1,10,5,5,centralclusterfactor=4)
+network=createwhole(20,2,15,1,25,2,5)
+#key (avgclusterpop,populationvariance,avconectivity,connectivityvariance,numclusters,interclusterconnect,centralclusterconnect,centralclusterfactor=1,popcount=0
+#tbh this is overengineered all we will likely need to change is numclusters average cluster connect and numclusters. all the other bollax can be left. 
+
+A = nx.adjacency_matrix(network)
 nx.draw(network)
