@@ -96,9 +96,23 @@ def starwithinterconect(avpop,populationvariance,avconectivity,connectivityvaria
             g.add_edge(startpoints2[l],endpoints2[l])
     print(popcount)
     return g
-#network=starwithinterconect(20,2,12,1,10,5,5,centralclusterfactor=4)
-network=createwhole(20,2,15,1,25,2,5)
+
+
+"""star with interconnect is same as "complete whole" but with a central cluster with atleast one 
+conection to each cluster.
+complete whole is a graph with clusters spread out and randomly interconnected im not sure what 
+the proper name is but we shouldnt carry on with "create whole"
+we can only compare these graphs if all parameters are equal which they should be rn as they come from the same variable. 
+the only difference should be the added central cluster. 
+order of parameters are the same for each function.
+"""
 #key (avgclusterpop,populationvariance,avconectivity,connectivityvariance,numclusters,interclusterconnect,centralclusterconnect,centralclusterfactor=1,popcount=0
+clustercount = 120#for both network types the number of clusters generated
+clusterpop=20#avg number of nodes in each cluster total pop approx = clustercount*clusterpop
+interclusterconnectivity = 2 #average number of connections randomly added between clusters in both graph types, is a measure of interconnectivity in a society.
+#network=starwithinterconect(clusterpop,interclusterconnectivity,15,1,clustercount,2,5,centralclusterfactor=4)
+network=createwhole(clusterpop,interclusterconnectivity,15,1,clustercount,2,5)
+
 #tbh this is overengineered all we will likely need to change is numclusters average cluster connect and numclusters. all the other bollax can be left. 
 
 A = nx.adjacency_matrix(network)
