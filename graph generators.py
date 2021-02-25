@@ -39,7 +39,7 @@ def createwhole(avpop,populationvariance,avconectivity,connectivityvariance,numc
     
     g=nx.Graph()
     for i in range(numclusters):
-        print("creating intercluster connections \n\n\n")
+        #print("creating intercluster connections \n\n\n")
         (cluster,popcount)=creatcluster(avpop,populationvariance,avconectivity,connectivityvariance,popcount)
         g=nx.compose(g,cluster)
         clusters.append(cluster)
@@ -57,7 +57,7 @@ def createwholestar(avpop,populationvariance,avconectivity,connectivityvariance,
     #station=degrees[0] #main connection to outerclusters
     interclusters=[]
     for i in range(numclusters):
-        print("creating intercluster connections \n\n\n")
+        #print("creating intercluster connections \n\n\n")
         (cluster,popcount)=creatcluster(avpop,populationvariance,avconectivity,connectivityvariance,popcount)
         centralconnections=random.choices(list(centralcluster.nodes()),k=interclusterconnect)#list if random nodes from central
         for j in range(interclusterconnect):
@@ -81,7 +81,7 @@ def starwithinterconect(avpop,populationvariance,avconectivity,connectivityvaria
     g=nx.Graph()
     g=nx.compose(g,centralcluster)
     for i in range(numclusters):
-        print("creating intercluster connections \n\n\n")
+        #print("creating intercluster connections \n\n\n")
         (cluster,popcount)=creatcluster(avpop,populationvariance,avconectivity,connectivityvariance,popcount)
         g=nx.compose(g,cluster)
         clusters.append(cluster)
@@ -107,13 +107,23 @@ the only difference should be the added central cluster.
 order of parameters are the same for each function.
 """
 #key (avgclusterpop,populationvariance,avconectivity,connectivityvariance,numclusters,interclusterconnect,centralclusterconnect,centralclusterfactor=1,popcount=0
-clustercount = 120#for both network types the number of clusters generated
+clustercount = 40#for both network types the number of clusters generated
 clusterpop=20#avg number of nodes in each cluster total pop approx = clustercount*clusterpop
 interclusterconnectivity = 2 #average number of connections randomly added between clusters in both graph types, is a measure of interconnectivity in a society.
-#network=starwithinterconect(clusterpop,interclusterconnectivity,15,1,clustercount,2,5,centralclusterfactor=4)
-network=createwhole(clusterpop,interclusterconnectivity,15,1,clustercount,2,5)
+network=starwithinterconect(clusterpop,interclusterconnectivity,15,1,clustercount-1,2,5,centralclusterfactor=2)
+#network=createwhole(clusterpop,interclusterconnectivity,15,1,clustercount,2,5)
 
 #tbh this is overengineered all we will likely need to change is numclusters average cluster connect and numclusters. all the other bollax can be left. 
 
 A = nx.adjacency_matrix(network)
-nx.draw(network)
+nx.draw(network, node_size=30)
+
+
+#print("spring \n\n")
+#nx.draw_spring(network, node_size=60)
+
+#print("spectral \n\n")
+#nx.draw_spectral(network, node_size=60)#best
+
+#print("shell \n\n")
+#nx.draw_shell(network, node_size=60)
