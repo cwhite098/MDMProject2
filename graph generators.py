@@ -81,7 +81,7 @@ def starwithinterconect(avpop,populationvariance,avconectivity,connectivityvaria
     g=nx.Graph()
     g=nx.compose(g,centralcluster)
     for i in range(numclusters):
-        #print("creating intercluster connections \n\n\n")
+        print("creating intercluster connections \n\n\n")
         (cluster,popcount)=creatcluster(avpop,populationvariance,avconectivity,connectivityvariance,popcount)
         g=nx.compose(g,cluster)
         clusters.append(cluster)
@@ -93,7 +93,9 @@ def starwithinterconect(avpop,populationvariance,avconectivity,connectivityvaria
         endpoints =random.choices(list(g.nodes()),k=interclusterconnect)
         for l in range(interclusterconnect):
             g.add_edge(startpoints[l],endpoints[l])
-            g.add_edge(startpoints2[l],endpoints2[l])
+            
+        for l in range(centralclusterconnect):    
+            g.add_edge(startpoints2[l],endpoints2[l])#central cluster to out cluster connections
     print(popcount)
     return g
 
@@ -107,7 +109,7 @@ the only difference should be the added central cluster.
 order of parameters are the same for each function.
 """
 #key (avgclusterpop,populationvariance,avconectivity,connectivityvariance,numclusters,interclusterconnect,centralclusterconnect,centralclusterfactor=1,popcount=0
-clustercount = 12#for both network types the number of clusters generated
+clustercount = 40#for both network types the number of clusters generated
 clusterpop=20#avg number of nodes in each cluster total pop approx = clustercount*clusterpop
 interclusterconnectivity = 2 #average number of connections randomly added between clusters in both graph types, is a measure of interconnectivity in a society.
 network2=starwithinterconect(clusterpop,interclusterconnectivity,15,1,clustercount-1,2,2,centralclusterfactor=1)
