@@ -107,21 +107,38 @@ the only difference should be the added central cluster.
 order of parameters are the same for each function.
 """
 #key (avgclusterpop,populationvariance,avconectivity,connectivityvariance,numclusters,interclusterconnect,centralclusterconnect,centralclusterfactor=1,popcount=0
-clustercount = 40#for both network types the number of clusters generated
+clustercount = 12#for both network types the number of clusters generated
 clusterpop=20#avg number of nodes in each cluster total pop approx = clustercount*clusterpop
 interclusterconnectivity = 2 #average number of connections randomly added between clusters in both graph types, is a measure of interconnectivity in a society.
-network=starwithinterconect(clusterpop,interclusterconnectivity,15,1,clustercount-1,2,5,centralclusterfactor=2)
-#network=createwhole(clusterpop,interclusterconnectivity,15,1,clustercount,2,5)
+network2=starwithinterconect(clusterpop,interclusterconnectivity,15,1,clustercount-1,2,2,centralclusterfactor=1)
+network=createwhole(clusterpop,interclusterconnectivity,15,1,clustercount,2,5)
 
 #tbh this is overengineered all we will likely need to change is numclusters average cluster connect and numclusters. all the other bollax can be left. 
 
 A = nx.adjacency_matrix(network)
-nx.draw(network, node_size=30)
+#nx.draw(network, node_size=30)
 
-
+#pos = nx.spring_layout(network, k=0.05, iterations=20)
 #print("spring \n\n")
-#nx.draw_spring(network, node_size=60)
+nx.draw_spring(network, size=30, k=0.05)
 
+n=network.number_of_nodes()
+m=network.number_of_edges()
+print("total nodes")
+print(n)
+print("\n\n\n total number of edges")
+print(m)
+print("\n\n\n ratio")
+print(n/m)
+
+n=network2.number_of_nodes()
+m=network2.number_of_edges()
+print("total nodes 2")
+print(n)
+print("\n\n\n total number of edges 2")
+print(m)
+print("\n\n\n ratio 2")
+print(n/m)
 #print("spectral \n\n")
 #nx.draw_spectral(network, node_size=60)#best
 
