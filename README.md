@@ -21,13 +21,13 @@ To view the solution to the problem on a network, call the function modelNetwork
 modelNetworkSIRD(a, b, mu, infectivePeriod, tf, n, I0, A)
 ```
 
-where a and b are infection parameters, 
-mu is the mortality rate (exclude for SIR version),
-infectivePeriod is how long the disease lasts, 
-tf is how long to run the model for (days),
-n is the population size, 
-I0 is the number of initially infected and 
-A is an adjacency matrix of the network.
+where a and b are infection parameters,  
+mu is the mortality rate (exclude for SIR version),  
+infectivePeriod is how long the disease lasts,  
+tf is how long to run the model for (days),  
+n is the population size,  
+I0 is the number of initially infected and  
+A is an adjacency matrix of the network.  
 
 ### Generating Networks
 We decided the use the python module NetworkX to generate our networks for the model since it has a large number and variety of built-in functions for generating different networks. Use networkGen.py to generate the adjacency matrix and then save it as a .mat file to be imported to MATLAB.
