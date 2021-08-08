@@ -17,9 +17,9 @@ To view the ODE solution run the script SIRSolve or SIRDSolve.
 ### Solution from Network
 To view the solution to the problem on a network, call the function modelNetworkSIR or modelNetworkSIRD as follows:
 
-'''MATLAB
+```MATLAB
 modelNetworkSIRD(a, b, mu, infectivePeriod, tf, n, I0, A)
-'''
+```
 
 where a and b are infection parameters, 
 mu is the mortality rate (exclude for SIR version),
