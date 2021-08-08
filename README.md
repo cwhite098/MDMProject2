@@ -5,7 +5,7 @@ The aim of this project is to extend the traditional SIR model of infectoious di
 We hoped to see how changing the structure of the network will change the rate of disease spread, the peak number of infections and other metrics of interest.
 
 ## Technologies
-MATLAB including built-in graph theory elements and ODE45.
+MATLAB including built-in graph theory elements and ODE45.  
 Python including NetworkX to generate graphs.
 
 ## Usage
