@@ -1,8 +1,9 @@
-# MDMProject2
+# MDM2 Project 2 - Studying Infectious Diseases on Networks
+
 
 Either run SIRSolve/SIRDSolve for the ODE solution or call modelNetworkSIR/modelNetworkSIRD as follows
 
-modelNetworkSIRD(a,b,mu, infectivePeriod, tf, n, I0, A)
+modelNetworkSIRD(a, b, mu, infectivePeriod, tf, n, I0, A)
 
 where a and b are infection parameters, 
 mu is the mortality rate (exclude for SIR version),
