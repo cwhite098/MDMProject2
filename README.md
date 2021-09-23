@@ -31,3 +31,6 @@ A is an adjacency matrix of the network.
 
 ### Generating Networks
 We decided the use the python module NetworkX to generate our networks for the model since it has a large number and variety of built-in functions for generating different networks. Use networkGen.py to generate the adjacency matrix and then save it as a .mat file to be imported to MATLAB.
+
+## Report
+Included in the repo is a copy of the accompanying write up that we completed as a part of this assignment.
